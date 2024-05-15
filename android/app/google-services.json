@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "154222043881",
+    "project_id": "ca-junction-lko-24",
+    "storage_bucket": "ca-junction-lko-24.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154222043881:android:ff457f956a68a94a198678",
+        "android_client_info": {
+          "package_name": "com.techsmms.ca"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyhm29eMpbKwcDIwBYdi1l4t8VY_UtEIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
