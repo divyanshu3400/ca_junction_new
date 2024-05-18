@@ -1,9 +1,7 @@
-import 'dart:convert';
-
-import 'package:ca/core/router/routers.dart';
 import 'package:ca/features/home/dashboard/root/presentation/riverpod/user_provider.dart';
 import 'package:ca/models/district_model.dart';
 import 'package:ca/models/state_model.dart';
+import 'package:ca/screens/add_client/gst_input.dart';
 import 'package:ca/screens/add_client/riverpod/add_client_provider.dart';
 import 'package:ca/screens/add_client/riverpod/district_value_provider.dart';
 import 'package:ca/screens/add_client/riverpod/state_value_provider.dart';
@@ -13,9 +11,11 @@ import 'package:ca/utility/ui_utils.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import '../../core/constant/text_style.dart';
+import '../../core/router/routers.dart';
 import '../../theme/daytheme.dart';
 import '../../theme/dimens.dart';
 import '../../utility/dropdown.dart';
@@ -31,13 +31,14 @@ class AddNewUserScreen extends ConsumerStatefulWidget {
 }
 
 class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
+  final GlobalKey<GSTNumberInputState> _gstKey = GlobalKey<GSTNumberInputState>();
+
   String userPhoneNumber = '';
   String isoCode = 'IN';
   String countryCode = '+91';
 
   @override
   Widget build(BuildContext context) {
-    // final state = ref.watch(addClientStateProvider);
     final notifier = ref.watch(addClientStateProvider.notifier);
     final statesAsyncValue = ref.watch(statesProvider);
     final districtsAsyncValue = ref.watch(districtsProvider);
@@ -47,7 +48,7 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
       appBar: AppBar(
         elevation: 0,
         leading: Padding(
-          padding: const EdgeInsets.only(left: 15.0),
+          padding: EdgeInsets.only(left: 10.h),
           child: IconButton(
             color: AppColors.primaryColor,
             icon: const Icon(Icons.arrow_back_ios),
@@ -66,51 +67,55 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
           child: Divider(
             thickness: 6.0,
             color: Color.fromRGBO(250, 246, 246, 1),
-          ), // Change the color as needed
+          ),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 10.h),
         child: SingleChildScrollView(
           child: Form(
             key: notifier.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text("GST Number",style: TextStyle(fontWeight: FontWeight.bold),),
-                const SizedBox(height: 10.0),
-                TextFormField(
-                  controller: notifier.gstNumberController,
-                  decoration: const InputDecoration(),
+                const Text(
+                  "GST Number",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 10.0),
+                SizedBox(height: 10.h),
+                GSTNumberInput(key: _gstKey), // Pass the key here
+                SizedBox(height: 10.h),
                 TextFormField(
                   controller: notifier.nameOfFirmController,
                   decoration: kinputBorderDecoration('Name of Firm'),
                   validator: Validators.isValidName,
                 ),
-                const SizedBox(height: 10.0),
+                SizedBox(height: 10.h),
                 TextFormField(
                   controller: notifier.nameOfPersonController,
-                  decoration: kinputBorderDecoration('Name of Person (Authorized)'),
+                  decoration:
+                  kinputBorderDecoration('Name of Person (Authorized)'),
                   validator: Validators.isValidName,
                 ),
-                const SizedBox(height: 16.0),
+                SizedBox(height: 10.h),
                 TextFormField(
                   controller: notifier.dobController,
-                  readOnly: true, // Set readOnly to true to prevent manual editing of the field
+                  readOnly: true,
+                  // Set readOnly to true to prevent manual editing of the field
                   decoration: InputDecoration(
                     labelText: 'Date of Birth',
                     labelStyle: const TextStyle(
                       color: Color.fromRGBO(2, 6, 20, 1),
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(Dimen.inputBorderRadius4),
+                      borderRadius:
+                      BorderRadius.circular(Dimen.inputBorderRadius4),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: AppColors.primaryColor),
-                      borderRadius: BorderRadius.circular(Dimen.inputBorderRadius4),
+                      borderSide:
+                      const BorderSide(color: AppColors.primaryColor),
+                      borderRadius:
+                      BorderRadius.circular(Dimen.inputBorderRadius4),
                     ),
                     suffixIcon: GestureDetector(
                       onTap: () async {
@@ -123,14 +128,15 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
                         );
                         // If a date is picked, set it to the text field
                         if (pickedDate != null) {
-                          notifier.dobController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+                          notifier.dobController.text =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
                         }
                       },
-                      child:const Icon(Icons.calendar_today),
+                      child: const Icon(Icons.calendar_today),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16.0),
+                SizedBox(height: 10.h),
 
                 // decoration: InputDecoration(labelText: 'Phone Number'),
                 Container(
@@ -148,7 +154,7 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
                       notifier.phoneNumber = value.phoneNumber!;
                     },
                     initialValue:
-                        PhoneNumber(isoCode: isoCode, dialCode: countryCode),
+                    PhoneNumber(isoCode: isoCode, dialCode: countryCode),
                     keyboardType: TextInputType.phone,
                     textStyle: const TextStyle(
                       fontSize: 18,
@@ -177,130 +183,132 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
                   children: [
                     Expanded(
                         child: statesAsyncValue.when(
-                      data: (states) {
-                        return DropdownFormField<StateModel>(
-                          onEmptyActionPressed: (dynamic obj) async {},
-                          dropdownItemSeparator: const Divider(
-                            color: Colors.black,
-                            height: 1,
-                          ),
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              suffixIcon: Icon(Icons.arrow_drop_down),
-                              labelText: "Select State"),
-                          onSaved: (dynamic item) {
-                            // Handle saved member
-                          },
-                          onChanged: (dynamic item) {
-                            notifier.selectedState = item;
-                          },
-                          validator: (dynamic value) {
-                            if (notifier.selectedState == null) {
-                              context.showSnackbarMessage("Please Select State");
-                            }
-                            return null;
-                          },
-                          // Add your validation logic if needed
-                          displayItemFn: (dynamic item) => item != null
-                              ? Text(
-                                  item.state,
-                                  style: const TextStyle(fontSize: 16),
-                                )
-                              : const SizedBox(),
-                          findFn: (String str) async => states,
-                          selectedFn: (dynamic item1, dynamic item2) {
-                            return item1 == item2;
-                          },
-                          filterFn: (dynamic state, String str) {
-                            final String name =
+                          data: (states) {
+                            return DropdownFormField<StateModel>(
+                              onEmptyActionPressed: (dynamic obj) async {},
+                              dropdownItemSeparator: const Divider(
+                                color: Colors.black,
+                                height: 1,
+                              ),
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  suffixIcon: Icon(Icons.arrow_drop_down),
+                                  labelText: "Select State"),
+                              onSaved: (dynamic item) {
+                                // Handle saved member
+                              },
+                              onChanged: (dynamic item) {
+                                notifier.selectedState = item;
+                              },
+                              validator: (dynamic value) {
+                                if (notifier.selectedState == null) {
+                                  context
+                                      .showSnackbarMessage("Please Select State");
+                                }
+                                return null;
+                              },
+                              // Add your validation logic if needed
+                              displayItemFn: (dynamic item) => item != null
+                                  ? Text(
+                                item.state,
+                                style: const TextStyle(fontSize: 16),
+                              )
+                                  : const SizedBox(),
+                              findFn: (String str) async => states,
+                              selectedFn: (dynamic item1, dynamic item2) {
+                                return item1 == item2;
+                              },
+                              filterFn: (dynamic state, String str) {
+                                final String name =
                                 (state as StateModel).state.toLowerCase();
-                            final String searchLowerCase = str.toLowerCase();
-                            return name.contains(searchLowerCase);
-                          },
-                          dropdownItemFn: (dynamic item,
+                                final String searchLowerCase = str.toLowerCase();
+                                return name.contains(searchLowerCase);
+                              },
+                              dropdownItemFn: (dynamic item,
                                   int position,
                                   bool focused,
                                   bool selected,
                                   Function() onTap) =>
-                              ListTile(
-                            title: Text('${item?.state}'),
-                            tileColor: focused
-                                ? Colors.blue.shade100
-                                : Colors.transparent,
-                            onTap: onTap,
-                          ),
-                        );
-                      },
-                      loading: () =>
+                                  ListTile(
+                                    title: Text('${item?.state}'),
+                                    tileColor: focused
+                                        ? Colors.blue.shade100
+                                        : Colors.transparent,
+                                    onTap: onTap,
+                                  ),
+                            );
+                          },
+                          loading: () =>
                           const Center(child: CircularProgressIndicator()),
-                      error: (error, stackTrace) =>
-                          Center(child: Text('Error: $error')),
-                    )),
+                          error: (error, stackTrace) =>
+                              Center(child: Text('Error: $error')),
+                        )),
                     const SizedBox(width: 20),
                     Expanded(
                         child: districtsAsyncValue.when(
-                      data: (districtsList) {
-                        return DropdownFormField<DistrictModel>(
-                          onEmptyActionPressed: (dynamic obj) async {},
-                          dropdownItemSeparator: const Divider(
-                            color: Colors.black,
-                            height: 1,
-                          ),
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              suffixIcon: Icon(Icons.arrow_drop_down),
-                              labelText: "Select District"),
-                          onSaved: (dynamic item) {
-                            // Handle saved member
-                          },
-                          onChanged: (dynamic item) {
-                            notifier.selectedDistrict = item;
-                          },
-                          validator: (dynamic value) {
-                            if (notifier.selectedState == null) {
-                              setState(() {
-                                context.showSnackbarMessage(
-                                    "Please Select district");
-                              });
-                            }
-                            return null;
-                          },
-                          // Add your validation logic if needed
-                          displayItemFn: (dynamic item) => item != null
-                              ? Text(
-                                  item.district,
-                                  style: const TextStyle(fontSize: 16),
-                                )
-                              : const SizedBox(),
-                          findFn: (String str) async => districtsList,
-                          selectedFn: (dynamic item1, dynamic item2) {
-                            return item1 == item2;
-                          },
-                          filterFn: (dynamic member, String str) {
-                            final String name =
-                                (member as DistrictModel).district.toLowerCase();
-                            final String searchLowerCase = str.toLowerCase();
-                            return name.contains(searchLowerCase);
-                          },
-                          dropdownItemFn: (dynamic item,
+                          data: (districtsList) {
+                            return DropdownFormField<DistrictModel>(
+                              onEmptyActionPressed: (dynamic obj) async {},
+                              dropdownItemSeparator: const Divider(
+                                color: Colors.black,
+                                height: 1,
+                              ),
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  suffixIcon: Icon(Icons.arrow_drop_down),
+                                  labelText: "Select District"),
+                              onSaved: (dynamic item) {
+                                // Handle saved member
+                              },
+                              onChanged: (dynamic item) {
+                                notifier.selectedDistrict = item;
+                              },
+                              validator: (dynamic value) {
+                                if (notifier.selectedState == null) {
+                                  setState(() {
+                                    context.showSnackbarMessage(
+                                        "Please Select district");
+                                  });
+                                }
+                                return null;
+                              },
+                              // Add your validation logic if needed
+                              displayItemFn: (dynamic item) => item != null
+                                  ? Text(
+                                item.district,
+                                style: const TextStyle(fontSize: 16),
+                              )
+                                  : const SizedBox(),
+                              findFn: (String str) async => districtsList,
+                              selectedFn: (dynamic item1, dynamic item2) {
+                                return item1 == item2;
+                              },
+                              filterFn: (dynamic member, String str) {
+                                final String name = (member as DistrictModel)
+                                    .district
+                                    .toLowerCase();
+                                final String searchLowerCase = str.toLowerCase();
+                                return name.contains(searchLowerCase);
+                              },
+                              dropdownItemFn: (dynamic item,
                                   int position,
                                   bool focused,
                                   bool selected,
                                   Function() onTap) =>
-                              ListTile(
-                            title: Text('${item?.district}'),
-                            tileColor: focused
-                                ? Colors.blue.shade100
-                                : Colors.transparent,
-                            onTap: onTap,
-                          ),
-                        );
-                      },
-                      loading: () =>
+                                  ListTile(
+                                    title: Text('${item?.district}'),
+                                    tileColor: focused
+                                        ? Colors.blue.shade100
+                                        : Colors.transparent,
+                                    onTap: onTap,
+                                  ),
+                            );
+                          },
+                          loading: () =>
                           const Center(child: CircularProgressIndicator()),
-                      error: (error, stackTrace) =>
-                          Center(child: Text('Error: $error')),
-                    )),
+                          error: (error, stackTrace) =>
+                              Center(child: Text('Error: $error')),
+                        )),
                   ],
                 ),
                 const SizedBox(height: 16.0),
@@ -309,21 +317,30 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
                     Expanded(
                       child: TextFormField(
                         decoration: kinputBorderDecoration('Pin Code'),
-                        validator: Validators.isValidName,
+                        validator: Validators.inValidOTP,
                         controller: notifier.pinCodeController,
+                        maxLength: 6,
                       ),
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: TextFormField(
-                        readOnly: true,
-                        decoration: kinputBorderDecoration('Admin ID'),
-                        initialValue:userAsyncValue.value?.lastName ,
-                      ),
-                    ),
+                        child: userAsyncValue.when(
+                          data: (data) {
+                            return TextFormField(
+                              readOnly: true,
+                              decoration: kinputBorderDecoration('Admin ID'),
+                              initialValue: data.username,
+                            );
+                          },
+                          loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                          error: (error, stackTrace) =>
+                              Center(child: Text('Error: $error')),
+                        )),
                   ],
                 ),
                 // SizedBox(height: 20),
+
               ],
             ),
           ),
@@ -336,35 +353,70 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
             colour: const Color.fromRGBO(255, 255, 255, 1),
             onPressed: () async {
               bool isValid = await notifier.validate();
-              // context.push('/${Routers.userRegisteredAs}');
-              if (isValid) {
-                var random = Random();
-                var randomNumber = random.nextInt(9000) + 1000;
-                String fullName = notifier.nameOfPersonController.text.toString().trim();
-                List<String> nameParts = fullName.split(' ');
-                var firstName = nameParts[0];
-                var lastName = nameParts.sublist(1).join(' ');
-                firstName = firstName.trim();
-                lastName = lastName.trim();
-                Map<String, dynamic> addClientData = {
-                  "first_name":firstName,
-                  "admin_id":userAsyncValue.value?.id,
-                  "username":'$firstName$randomNumber',
-                  "last_name":lastName,
-                  "email":notifier.emailController.text.toString().trim(),
-                  "gst_number" : notifier.gstNumberController.text.toString().trim(),
-                  "phone_number":notifier.phoneNumber.toString().trim(),
-                  "dob":notifier.dobController.text.toString().trim(),
-                  "state_id":notifier.selectedState?.id,
-                  "district_id":notifier.selectedDistrict?.id,
-                  "pincode":notifier.pinCodeController.text.toString().trim(),
-                  "name_of_firm":notifier.nameOfFirmController.text.toString().trim()
-                };
-                HiveService().putData(userDataKey, addClientData);
-                setState(() {
-                  context.push('/${Routers.userRegisteredAs}');
-
-                });
+              String? gstNumber = _gstKey.currentState?.getGSTNumber();
+              if (notifier.selectedState != null &&
+                  notifier.selectedDistrict != null && gstNumber !=null) {
+                if (isValid) {
+                  bool proceed = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Confirmation'),
+                        content: const Text('Do you want to proceed ?'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Cancel'),
+                            onPressed: () {
+                              context.pop(false); // Return false when cancelled
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Confirm'),
+                            onPressed: () {
+                              context.pop(true);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  if (proceed) {
+                    var random = Random();
+                    var randomNumber = random.nextInt(9000) + 1000;
+                    String fullName = notifier.nameOfPersonController.text
+                        .toString()
+                        .trim();
+                    List<String> nameParts = fullName.split(' ');
+                    var firstName = nameParts[0];
+                    var lastName = nameParts.sublist(1).join(' ');
+                    firstName = firstName.trim();
+                    lastName = lastName.trim();
+                    if (lastName.isEmpty) {
+                      lastName = "NA";
+                    }
+                    Map<String, dynamic> addClientData = {
+                      "first_name": firstName,
+                      "admin_id": userAsyncValue.value?.id,
+                      "username": '$firstName$randomNumber',
+                      "last_name": lastName,
+                      "email":
+                      notifier.emailController.text.toString().trim(),
+                      "gst_number": gstNumber,
+                      "phone_number": notifier.phoneNumber.toString().trim(),
+                      "dob": notifier.dobController.text.toString().trim(),
+                      "state_id": notifier.selectedState?.id,
+                      "district_id": notifier.selectedDistrict?.id,
+                      "pincode":
+                      notifier.pinCodeController.text.toString().trim(),
+                      "name_of_firm":
+                      notifier.nameOfFirmController.text.toString().trim()
+                    };
+                    HiveService().putData(userDataKey, addClientData);
+                    setState(() {
+                      context.pushReplacement('/${Routers.userRegisteredAs}');
+                    });
+                  }
+                }
               }
             },
             title: 'Submit',

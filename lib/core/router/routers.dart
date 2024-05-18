@@ -1,11 +1,11 @@
 class Routers{
   static String home = 'home';
+  static String clientHome = 'clientHome';
   static String splashScreen = 'splashScreen';
   static String roleScreen = 'roleScreen';
   static String welcomeScreen = 'welcomeScreen';
   static String homeShell = 'home-shell';
   static String homeRoot = 'home-root';
-  static String root = 'root';
   static String addClient = 'addClient';
   static String changePass = 'changePass';
   static String onBoarding = 'onboarding';
@@ -24,6 +24,9 @@ class Routers{
   static String support = 'support';
   static String profile = 'profile';
   static String more = 'more';
+  static String clientSupport = 'clientSupport';
+  static String clientProfileB = 'clientProfileB';
+  static String clientMore = 'clientMore';
   static String myClients = 'myClients';
   static String userRegistration = 'user-registration';
   static String userRegisteredAs = 'userRegisteredAs';

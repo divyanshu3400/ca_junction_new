@@ -5,7 +5,6 @@ final bottomStateProvider = StateNotifierProvider<BottomNavProvider, int>(
 
 class BottomNavProvider extends StateNotifier<int> {
   BottomNavProvider(super.state);
-
   void setIndex(int value) {
     state = value;
   }

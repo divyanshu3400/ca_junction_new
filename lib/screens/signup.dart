@@ -1,63 +1,154 @@
 import 'package:ca/components/rounded_button.dart';
+import 'package:ca/core/network_connectivity_check/network_connectivity_state.dart';
 import 'package:ca/core/router/routers.dart';
 import 'package:ca/theme/daytheme.dart';
 import 'package:ca/utility/shared_pref.dart';
+import 'package:ca/utility/ui_utils.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../core/constant/text_style.dart';
+import '../core/network_connectivity_check/network_connectivity_provider.dart';
 import '../input_form_field.dart';
+import '../models/role_model.dart';
+import '../riverpod/role_provider.dart';
 import '../utility/api_request.dart';
 import '../utility/constants.dart';
 import 'dart:math';
 import '../utility/custom_loader.dart';
+import '../utility/dropdown.dart';
 import '../utility/firebase_serv.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordController2 = TextEditingController();
+
   bool passwordShow = true;
   bool _agreeToTerms = false;
   String? _deviceId;
+  Role? selectedRole;
 
   @override
-  void initState() async{
-    _deviceId = await FirebaseServ.getFCMToken();
+  void initState() {
+    Future(() {
+      ref.read(connectivityStatusProviders.notifier).checkStatus();
+    });
     super.initState();
+    getDeviceId();
+
+  }
+  @override
+  void dispose() {
+    ref.read(connectivityStatusProviders.notifier).dispose();
+    super.dispose();
   }
 
+
+  Future<void> getDeviceId() async {
+    String? deviceId = await FirebaseServ.getFCMToken();
+    setState(() {
+      _deviceId = deviceId;
+    });
+  }
   @override
   Widget build(BuildContext context) {
+    final rolesAsyncValue = ref.watch(rolesProvider);
+    final connectivity = ref.watch(connectivityStatusProviders);
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
-              const SizedBox(height: 168.0),
+              SizedBox(height: 70.h),
               Text(
                 'Welcome !',
                 style: kTitleTextColor(context),
               ),
-              const SizedBox(height: 40.0),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 22),
+              SizedBox(height: 30.h),
+              Padding(
+                padding: const EdgeInsets.all(20),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      rolesAsyncValue.when(
+                        data: (districtsList) {
+                          return DropdownFormField<Role>(
+                            onEmptyActionPressed: (dynamic obj) async {},
+                            dropdownItemSeparator: const Divider(
+                              color: Colors.black,
+                              height: 1,
+                            ),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                suffixIcon: Icon(Icons.arrow_drop_down),
+                                labelText: "Create account as"),
+                            onSaved: (dynamic item) {
+                              // Handle saved member
+                            },
+                            onChanged: (dynamic item) {
+                              selectedRole = item;
+                            },
+                            validator: (dynamic value) {
+                              if (selectedRole == null) {
+                                setState(() {
+                                  context.showSnackbarMessage(
+                                      "Please Select dropdown value");
+                                });
+                              }
+                              return null;
+                            },
+                            // Add your validation logic if needed
+                            displayItemFn: (dynamic item) => item != null
+                                ? Text(item.role,
+                              style: const TextStyle(fontSize: 16),
+                            )
+                                : const SizedBox(),
+                            findFn: (String str) async => districtsList,
+                            selectedFn: (dynamic item1, dynamic item2) {
+                              return item1 == item2;
+                            },
+                            filterFn: (dynamic member, String str) {
+                              final String name =
+                              (member as Role).role.toString();
+                              final String searchLowerCase = str.toLowerCase();
+                              return name.contains(searchLowerCase);
+                            },
+                            dropdownItemFn: (dynamic item,
+                                int position,
+                                bool focused,
+                                bool selected,
+                                Function() onTap) =>
+                                ListTile(
+                                  title: Text('${item?.role}'),
+                                  tileColor: focused
+                                      ? Colors.blue.shade100
+                                      : Colors.transparent,
+                                  onTap: onTap,
+                                ),
+                          );
+                        },
+                        loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                        error: (error, stackTrace) =>
+                            Center(child: Text('Error: $error')),
+                      ),
+                      SizedBox(height: 20.h),
                       const Text(
                         'Full Name',
                         style: TextStyle(
@@ -66,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      const SizedBox(height: 7.0),
+                      SizedBox(height: 7.h),
                       InputFormField(
                         borderRadius: BorderRadius.circular(10),
                         fillColor: const Color(0xfffafafa),
@@ -80,7 +171,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         hintText: 'Enter your name',
                         borderType: BorderType.none,
                       ),
-                      const SizedBox(height: 10.0),
+                      SizedBox(height: 10.h),
 
                       // Email Address field
                       const Text(
@@ -91,7 +182,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      const SizedBox(height: 7.0),
+                      SizedBox(height: 7.h),
                       InputFormField(
                         borderRadius: BorderRadius.circular(10),
                         fillColor: const Color(0xfffafafa),
@@ -105,8 +196,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         hintText: 'Enter your Email Address',
                         borderType: BorderType.none,
                       ),
-                      const SizedBox(height: 10.0),
-
+                      SizedBox(height: 10.h),
                       // Password field
                       const Text(
                         'Password',
@@ -116,7 +206,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      const SizedBox(height: 7.0),
+                      SizedBox(height: 7.h),
                       InputFormField(
                         borderRadius: BorderRadius.circular(10),
                         fillColor: const Color(0xfffafafa),
@@ -132,7 +222,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         borderType: BorderType.none,
                         textEditingController: passwordController,
                       ),
-                      const SizedBox(height: 7.0),
+                      SizedBox(height: 7.h),
                       const Text(
                         'Password',
                         style: TextStyle(
@@ -141,7 +231,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      const SizedBox(height: 7.0),
+                      SizedBox(height: 7.h),
                       InputFormField(
                         borderRadius: BorderRadius.circular(10),
                         fillColor: const Color(0xfffafafa),
@@ -187,74 +277,83 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ],
                       ),
                       const SizedBox(height: 30.0),
-
-                      RoundedButton(
-                        colour: const Color.fromRGBO(16, 13, 64, 1),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false, // Prevent user from dismissing dialog
-                              builder: (BuildContext context) {
-                                return const CustomLoaderDialog(message: 'Creating Account. Don\'t exit..');
-                              },
-                            );
-                            _handleSubmit();
-                          }
-                        },
-                        title: 'Sign Up',
-                        textColor: const Color.fromRGBO(255, 255, 255, 1),
-                      ),
-
-                      // Sign Up with Phone Number button
-                      RoundedButton(
-                        colour: const Color.fromRGBO(255, 255, 255, 1),
-                        onPressed: () {
-                          context.go('/${Routers.phoneSignUp}');
-                        },
-                        title: 'With Phone Number',
-                        border: AppColors.primaryColor,
-                        textColor: AppColors.primaryColor,
-                      ),
                     ],
                   ),
                 ),
               ),
-              // Already have an account? Sign In button
-
             ],
           ),
         ),
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Already have an account ?',
-            style: TextStyle(
-              color: AppColors.primaryColor,
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w400,
-              fontSize: 12.0,
-            ),
-          ),
-          TextButton(
-            onPressed: () {
+      persistentFooterButtons: [
+        Column(
+          children: [
+            RoundedButton(
+              colour: const Color.fromRGBO(16, 13, 64, 1),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  if(connectivity.connectivityStatus == ConnectivityStatus.isConnected){
+                    if(selectedRole!=null){
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false, // Prevent user from dismissing dialog
+                        builder: (BuildContext context) {
+                          return const CustomLoaderDialog(message: 'Creating Account. Don\'t exit..');
+                        },
+                      );
+                      _handleSubmit();
+                    }
+                  }
+                  else{
+                    context.showSnackbarMessage("Internet Required");
+                  }
 
-              context.go('/${Routers.signIn}');
-            },
-            child: const Text(
-              "Sign In",
-              style: TextStyle(
-                color: AppColors.primaryColor,
-                fontFamily: "Poppins",
-                fontWeight: FontWeight.w600,
-                fontSize: 12.0,
-              ),
+                }
+              },
+              title: 'Sign Up',
+              textColor: const Color.fromRGBO(255, 255, 255, 1),
             ),
-          ),
-        ],
-      ),
+            RoundedButton(
+              colour: const Color.fromRGBO(255, 255, 255, 1),
+              onPressed: () {
+                context.go('/${Routers.phoneSignUp}');
+              },
+              title: 'With Phone Number',
+              border: AppColors.primaryColor,
+              textColor: AppColors.primaryColor,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Already have an account ?',
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12.0,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+
+                    context.go('/${Routers.signIn}');
+                  },
+                  child: const Text(
+                    "Sign In",
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
   Future<void> _handleSubmit() async {
@@ -269,6 +368,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     var lastName = nameParts.sublist(1).join(' ');
     firstName = firstName.trim();
     lastName = lastName.trim();
+
     Map<String, String> formData = {
       'username': '$firstName$randomNumber',
       'first_name': firstName,
@@ -277,6 +377,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'password': userPass,
       'password2': userPass2,
       'device_id': _deviceId!,
+      'role_code':selectedRole?.roleCode??""
     };
     var response = await postRequest('api/create-user', formData);
     setState(() {
@@ -285,10 +386,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         SharedPref.storeBool(iSLOGGEDIN, true);
         SharedPref.storeInt(userId, response['data']['id']);
         SharedPref.storeString(token, response['token']);
+        SharedPref.storeString(userRole, response['data']['role']);
         context.pushReplacement('/${Routers.welcomeScreen}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${response['message']}')),
-        );
+        context.showSnackbarMessage(response['message']);
+
       } else if (response != null && response['status'] == 400) {
         var errorMessage = response['message'];
         if (errorMessage is Map && errorMessage.containsKey('password')) {
@@ -297,13 +398,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         else if (errorMessage is Map && errorMessage.containsKey('username')) {
           errorMessage = errorMessage['username'];
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage.toString())),
-        );
+        context.showSnackbarMessage(errorMessage);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error, Try again')),
-        );
+        context.showSnackbarMessage("Error, Try again");
       }
     });
 

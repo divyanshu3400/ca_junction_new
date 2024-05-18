@@ -56,11 +56,11 @@ class Validators {
         return 'GST number should be 15 characters long';
       }
 
-
-      // Check if the GST number matches the regular expression pattern
-      if (!gstRegex.hasMatch(gstNumber)) {
-        return 'Invalid GST number format';
-      }
+      //
+      // // Check if the GST number matches the regular expression pattern
+      // if (!gstRegex.hasMatch(gstNumber)) {
+      //   return 'Invalid GST number format';
+      // }
 
       // If all conditions pass, return null to indicate a valid GST number
       return null;

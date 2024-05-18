@@ -1,6 +1,8 @@
 import 'package:ca/core/router/routers.dart';
 import 'package:ca/features/home/dashboard/root/presentation/riverpod/bottom_nav_provider.dart';
 import 'package:ca/theme/daytheme.dart';
+import 'package:ca/utility/constants.dart';
+import 'package:ca/utility/shared_pref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,20 +54,22 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   }
 
   void _onItemTapped(index) {
+    String? role = SharedPref.getString(userRole);
     ref.read(bottomStateProvider.notifier).setIndex(index);
     HapticFeedback.mediumImpact();
+    print(role);
     switch (index) {
       case 0:
-        context.go('/${Routers.home}');
+        role=='admin' ? context.go('/${Routers.home}') : context.go('/${Routers.clientHome}');
         break;
       case 1:
-        context.go('/${Routers.support}');
+        role=='admin' ? context.go('/${Routers.support}') : context.go('/${Routers.clientSupport}');
         break;
       case 2:
-        context.go('/${Routers.profile}');
+        role=='admin' ? context.go('/${Routers.profile}') : context.go('/${Routers.clientProfileB}');
         break;
       case 3:
-        context.go('/${Routers.more}');
+        role=='admin' ? context.go('/${Routers.more}') : context.go('/${Routers.clientMore}');
     }
   }
 }

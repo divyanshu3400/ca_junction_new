@@ -1,5 +1,4 @@
 import 'package:ca/components/admin/admin_profile.dart';
-import 'package:ca/components/admin/dashboard.dart';
 import 'package:ca/components/admin/more.dart';
 import 'package:ca/components/admin/support.dart';
 import 'package:ca/screens/Tasks/addTask_Screen.dart';
@@ -41,7 +40,6 @@ class _TasksScreenState extends State<TasksScreen> {
   // Define a list of pages corresponding to each bottom navigation bar item
   final List<Widget> _pages = [
     // Define your home page widget here
-    DashboardScreen(),
     AdminSupportScreen(),
     AdminProfileScreen(),
     AdminMoreScreen(),

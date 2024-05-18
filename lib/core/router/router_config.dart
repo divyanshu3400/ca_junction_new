@@ -2,6 +2,7 @@ import 'package:ca/components/admin/admin_profile.dart';
 import 'package:ca/components/admin/more.dart';
 import 'package:ca/components/admin/my_client.dart';
 import 'package:ca/components/admin/support.dart';
+import 'package:ca/components/client/screen/client_dashboard.dart';
 import 'package:ca/core/router/routers.dart';
 import 'package:ca/features/authentication/profile_and_password/presentation/pages/profile_and_password_page.dart';
 import 'package:ca/features/authentication/reset_password/presentation/pages/reset_password_page.dart';
@@ -31,7 +32,7 @@ final GlobalKey<NavigatorState> _shellState = GlobalKey(debugLabel: 'shell');
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/${Routers.splashScreen}',
+    initialLocation: '/${Routers.home}',
     navigatorKey: _rootState,
     routes: [
       GoRoute(
@@ -67,7 +68,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/${Routers.signUp}',
         name: Routers.signUp,
-        builder: (context, state) => SignUpScreen(key: state.pageKey),
+        builder: (context, state) {
+          return SignUpScreen(
+            key: state.pageKey,
+          );
+        },
       ),
       GoRoute(
         path: '/${Routers.phoneSignUp}',
@@ -137,7 +142,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           },
         ),
       ),
-
       GoRoute(
         path: '/${Routers.firmType}',
         name: Routers.firmType,
@@ -200,11 +204,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       ),
       ShellRoute(
         navigatorKey: _shellState,
-        builder: (context, state, child) =>
-            MainPage(key: state.pageKey, child: child),
+        builder: (context, state, child) => MainPage(key: state.pageKey, child: child),
         routes: [
           GoRoute(
-            name: Routers.homeShell,
+            name: Routers.home,
             path: '/${Routers.home}',
             pageBuilder: (context, state) {
               return NoTransitionPage(
@@ -239,6 +242,50 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             name: Routers.more,
             path: '/${Routers.more}',
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: AdminMoreScreen(
+                  key: state.pageKey,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            name: Routers.clientHome,
+            path: '/${Routers.clientHome}',
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: ClientDashboardScreen(
+                  key: state.pageKey,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            name: Routers.clientSupport,
+            path: '/${Routers.clientSupport}',
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: AdminSupportScreen(
+                  key: state.pageKey,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            name: Routers.clientProfileB,
+            path: '/${Routers.clientProfileB}',
+            pageBuilder: (context, state) {
+              return NoTransitionPage(
+                child: AdminProfileScreen(
+                  key: state.pageKey,
+                ),
+              );
+            },
+          ),
+          GoRoute(
+            name: Routers.clientMore,
+            path: '/${Routers.clientMore}',
             pageBuilder: (context, state) {
               return NoTransitionPage(
                 child: AdminMoreScreen(

@@ -77,6 +77,8 @@ class _$AppDatabase extends AppDatabase {
 
   ClientDao? _clientDaoInstance;
 
+  ClientDataDao? _clientDataDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -114,6 +116,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `FirmType` (`id` INTEGER NOT NULL, `firm` TEXT NOT NULL, `description` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ClientModel` (`id` INTEGER NOT NULL, `password` TEXT NOT NULL, `lastLogin` TEXT, `isSuperuser` INTEGER NOT NULL, `username` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `email` TEXT NOT NULL, `isStaff` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `dateJoined` TEXT NOT NULL, `dob` TEXT, `phoneNumber` TEXT, `isAccepted` INTEGER NOT NULL, `sync` INTEGER NOT NULL, `role` TEXT NOT NULL, `admin` INTEGER, `clientData` TEXT, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `ClientDataModel` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `email` TEXT NOT NULL, `password` TEXT NOT NULL, `isSuperuser` INTEGER NOT NULL, `isStaff` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `dateJoined` TEXT NOT NULL, `dob` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `isAccepted` INTEGER NOT NULL, `sync` INTEGER NOT NULL, `role` TEXT NOT NULL, `admin` INTEGER NOT NULL, `adminClientJson` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -160,6 +164,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   ClientDao get clientDao {
     return _clientDaoInstance ??= _$ClientDao(database, changeListener);
+  }
+
+  @override
+  ClientDataDao get clientDataDao {
+    return _clientDataDaoInstance ??= _$ClientDataDao(database, changeListener);
   }
 }
 
@@ -1115,5 +1124,173 @@ class _$ClientDao extends ClientDao {
   @override
   Future<void> updateClient(ClientModel client) async {
     await _clientModelUpdateAdapter.update(client, OnConflictStrategy.abort);
+  }
+}
+
+class _$ClientDataDao extends ClientDataDao {
+  _$ClientDataDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
+        _clientDataModelInsertionAdapter = InsertionAdapter(
+            database,
+            'ClientDataModel',
+            (ClientDataModel item) => <String, Object?>{
+                  'id': item.id,
+                  'username': item.username,
+                  'firstName': item.firstName,
+                  'lastName': item.lastName,
+                  'email': item.email,
+                  'password': item.password,
+                  'isSuperuser': item.isSuperuser ? 1 : 0,
+                  'isStaff': item.isStaff ? 1 : 0,
+                  'isActive': item.isActive ? 1 : 0,
+                  'dateJoined': item.dateJoined,
+                  'dob': item.dob,
+                  'phoneNumber': item.phoneNumber,
+                  'isAccepted': item.isAccepted ? 1 : 0,
+                  'sync': item.sync ? 1 : 0,
+                  'role': item.role,
+                  'admin': item.admin,
+                  'adminClientJson': item.adminClientJson
+                },
+            changeListener),
+        _clientDataModelUpdateAdapter = UpdateAdapter(
+            database,
+            'ClientDataModel',
+            ['id'],
+            (ClientDataModel item) => <String, Object?>{
+                  'id': item.id,
+                  'username': item.username,
+                  'firstName': item.firstName,
+                  'lastName': item.lastName,
+                  'email': item.email,
+                  'password': item.password,
+                  'isSuperuser': item.isSuperuser ? 1 : 0,
+                  'isStaff': item.isStaff ? 1 : 0,
+                  'isActive': item.isActive ? 1 : 0,
+                  'dateJoined': item.dateJoined,
+                  'dob': item.dob,
+                  'phoneNumber': item.phoneNumber,
+                  'isAccepted': item.isAccepted ? 1 : 0,
+                  'sync': item.sync ? 1 : 0,
+                  'role': item.role,
+                  'admin': item.admin,
+                  'adminClientJson': item.adminClientJson
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<ClientDataModel> _clientDataModelInsertionAdapter;
+
+  final UpdateAdapter<ClientDataModel> _clientDataModelUpdateAdapter;
+
+  @override
+  Future<List<ClientDataModel>> findAllUnsyncedClientDataChanges() async {
+    return _queryAdapter.queryList('SELECT * FROM ClientDataModel WHERE sync=1',
+        mapper: (Map<String, Object?> row) => ClientDataModel(
+            id: row['id'] as int,
+            username: row['username'] as String,
+            firstName: row['firstName'] as String,
+            lastName: row['lastName'] as String,
+            email: row['email'] as String,
+            password: row['password'] as String,
+            isSuperuser: (row['isSuperuser'] as int) != 0,
+            isStaff: (row['isStaff'] as int) != 0,
+            isActive: (row['isActive'] as int) != 0,
+            dateJoined: row['dateJoined'] as String,
+            dob: row['dob'] as String,
+            phoneNumber: row['phoneNumber'] as String,
+            isAccepted: (row['isAccepted'] as int) != 0,
+            sync: (row['sync'] as int) != 0,
+            role: row['role'] as String,
+            admin: row['admin'] as int,
+            adminClientJson: row['adminClientJson'] as String));
+  }
+
+  @override
+  Future<List<ClientDataModel>> findAllClient() async {
+    return _queryAdapter.queryList('SELECT * FROM ClientDataModel',
+        mapper: (Map<String, Object?> row) => ClientDataModel(
+            id: row['id'] as int,
+            username: row['username'] as String,
+            firstName: row['firstName'] as String,
+            lastName: row['lastName'] as String,
+            email: row['email'] as String,
+            password: row['password'] as String,
+            isSuperuser: (row['isSuperuser'] as int) != 0,
+            isStaff: (row['isStaff'] as int) != 0,
+            isActive: (row['isActive'] as int) != 0,
+            dateJoined: row['dateJoined'] as String,
+            dob: row['dob'] as String,
+            phoneNumber: row['phoneNumber'] as String,
+            isAccepted: (row['isAccepted'] as int) != 0,
+            sync: (row['sync'] as int) != 0,
+            role: row['role'] as String,
+            admin: row['admin'] as int,
+            adminClientJson: row['adminClientJson'] as String));
+  }
+
+  @override
+  Stream<List<String>> findAllUsername() {
+    return _queryAdapter.queryListStream(
+        'SELECT first_name FROM ClientDataModel',
+        mapper: (Map<String, Object?> row) => row.values.first as String,
+        queryableName: 'ClientDataModel',
+        isView: false);
+  }
+
+  @override
+  Stream<ClientDataModel?> findClientDataById(int id) {
+    return _queryAdapter.queryStream(
+        'SELECT * FROM ClientDataModel WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => ClientDataModel(
+            id: row['id'] as int,
+            username: row['username'] as String,
+            firstName: row['firstName'] as String,
+            lastName: row['lastName'] as String,
+            email: row['email'] as String,
+            password: row['password'] as String,
+            isSuperuser: (row['isSuperuser'] as int) != 0,
+            isStaff: (row['isStaff'] as int) != 0,
+            isActive: (row['isActive'] as int) != 0,
+            dateJoined: row['dateJoined'] as String,
+            dob: row['dob'] as String,
+            phoneNumber: row['phoneNumber'] as String,
+            isAccepted: (row['isAccepted'] as int) != 0,
+            sync: (row['sync'] as int) != 0,
+            role: row['role'] as String,
+            admin: row['admin'] as int,
+            adminClientJson: row['adminClientJson'] as String),
+        arguments: [id],
+        queryableName: 'ClientDataModel',
+        isView: false);
+  }
+
+  @override
+  Future<void> deleteAllUsers() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM ClientDataModel');
+  }
+
+  @override
+  Future<void> insertUser(ClientDataModel clientDataModel) async {
+    await _clientDataModelInsertionAdapter.insert(
+        clientDataModel, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> insertAllUserList(List<ClientDataModel> clientDataModel) async {
+    await _clientDataModelInsertionAdapter.insertList(
+        clientDataModel, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateClient(ClientDataModel user) async {
+    await _clientDataModelUpdateAdapter.update(user, OnConflictStrategy.abort);
   }
 }
