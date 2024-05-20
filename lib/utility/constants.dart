@@ -67,9 +67,9 @@ InputDecoration kTextFieldDecoration(BuildContext context) {
 }
 
 const String iSLOGGEDIN = 'isLoggedIn';
-// const String BASE_URL = 'http://techsmms.com:9999/';
+const String BASE_URL = 'http://techsmms.com:9999/';
 // const String BASE_URL = 'http://89.116.20.46:9999/';
-const String BASE_URL = 'http://10.10.10.23:8000/';
+// const String BASE_URL = 'http://192.168.74.108:8000/';
 const String userDataKey = 'userHiveData';
 const String userBox = 'userBox';
 const String userId = 'userId';

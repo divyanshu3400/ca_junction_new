@@ -3,7 +3,6 @@ import 'package:ca/models/registration_type_model.dart';
 import 'package:ca/models/role_model.dart';
 import 'package:ca/utility/constants.dart';
 import 'package:ca/utility/shared_pref.dart';
-import 'package:core/core.dart';
 import 'package:http/http.dart' as http;
 import '../database/database_service.dart';
 

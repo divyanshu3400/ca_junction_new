@@ -1,7 +1,11 @@
 import 'package:ca/components/admin/admin_profile.dart';
 import 'package:ca/components/admin/more.dart';
 import 'package:ca/components/admin/my_client.dart';
+import 'package:ca/components/admin/payment/clients_list_for_payment.dart';
 import 'package:ca/components/admin/support.dart';
+import 'package:ca/components/client/screen/dashboard.dart';
+import 'package:ca/components/client/screen/downloaded_data.dart';
+import 'package:ca/components/client/screen/payment_packages.dart';
 import 'package:ca/core/router/routers.dart';
 import 'package:ca/features/authentication/profile_and_password/presentation/pages/profile_and_password_page.dart';
 import 'package:ca/features/authentication/reset_password/presentation/pages/reset_password_page.dart';
@@ -23,6 +27,12 @@ import 'package:ca/screens/splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../components/client/screen/change_email.dart';
+import '../../components/client/screen/individualServices_packages.dart';
+import '../../components/client/screen/ledger.dart';
+import '../../components/client/screen/lumpsum_packages.dart';
+import '../../components/client/screen/pay_admin.dart';
+import '../../components/client/screen/payment_Ledger.dart';
 import '../../screens/add_client/user_registered_as.dart';
 import '../../screens/signup.dart';
 
@@ -31,7 +41,8 @@ final GlobalKey<NavigatorState> _shellState = GlobalKey(debugLabel: 'shell');
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/${Routers.splashScreen}',
+    // initialLocation: '/${Routers.splashScreen}',
+    initialLocation: '/${Routers.changeEmail}',
     navigatorKey: _rootState,
     routes: [
       GoRoute(
@@ -100,6 +111,21 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             return PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 300),
               pageBuilder: (_, __, ___) => MyClientScreen(key: state.pageKey),
+              transitionsBuilder: (_, animation, __, child) {
+                return FadeTransition(opacity: animation, child: child,);
+              },
+            );
+          },
+        ),
+      ),
+      GoRoute(
+        path: '/${Routers.clientPayment}',
+        name: Routers.clientPayment,
+        builder: (context, state) => Navigator(
+          onGenerateRoute: (settings) {
+            return PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 300),
+              pageBuilder: (_, __, ___) => MyClientPaymentScreen(key: state.pageKey),
               transitionsBuilder: (_, animation, __, child) {
                 return FadeTransition(opacity: animation, child: child,);
               },
@@ -197,6 +223,51 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/${Routers.userRegistration}',
         name: Routers.userRegistration,
         builder: (context, state) =>const AddNewUserScreen(),
+      ),
+      GoRoute(
+        path: '/${Routers.clientDashboard}',
+        name: Routers.clientDashboard,
+        builder: (context, state) =>const ClientDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/${Routers.clientDownloadedData}',
+        name: Routers.clientDownloadedData,
+        builder: (context, state) =>const Downloaded_Data(),
+      ),
+      GoRoute(
+        path: '/${Routers.clientPaymentPackages}',
+        name: Routers.clientPaymentPackages,
+        builder: (context, state) =>const Payment_Packages(),
+      ),
+      GoRoute(
+        path: '/${Routers.clientLumpsumPackages}',
+        name: Routers.clientLumpsumPackages,
+        builder: (context, state) =>const Lumpsum_Packages(),
+      ),
+      GoRoute(
+        path: '/${Routers.clientIndividualServicePackages}',
+        name: Routers.clientIndividualServicePackages,
+        builder: (context, state) =>const IndividualServices_Package(),
+      ),
+      GoRoute(
+        path: '/${Routers.clientPayAdmin}',
+        name: Routers.clientPayAdmin,
+        builder: (context, state) =>const Pay_Admin(),
+      ),
+      GoRoute(
+        path: '/${Routers.clientPaymentLegder}',
+        name: Routers.clientPaymentLegder,
+        builder: (context, state) =>const Payment_Legder(),
+      ),
+      GoRoute(
+        path: '/${Routers.clientLegder}',
+        name: Routers.clientLegder,
+        builder: (context, state) =>const Ledger(),
+      ),
+      GoRoute(
+        path: '/${Routers.changeEmail}',
+        name: Routers.changeEmail,
+        builder: (context, state) =>const ChangeEmail(),
       ),
       ShellRoute(
         navigatorKey: _shellState,

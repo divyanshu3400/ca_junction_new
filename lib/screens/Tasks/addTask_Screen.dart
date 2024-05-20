@@ -1,10 +1,9 @@
 import 'package:ca/theme/daytheme.dart';
 import 'package:flutter/material.dart';
 
-
 class RoundedButton2 extends StatelessWidget {
-
-  const RoundedButton2({super.key,
+  const RoundedButton2({
+    super.key,
     required this.colour,
     required this.onPressed,
     required this.title,
@@ -60,24 +59,23 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      backgroundColor:Color.fromRGBO(255, 255, 255, 1),
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Padding(
-          padding:const EdgeInsets.only(left: 15.0),
+          padding: const EdgeInsets.only(left: 15.0),
           child: IconButton(
             color: AppColors.primaryColor,
-            icon:const Icon(Icons.arrow_back_ios),
+            icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
               // Add your back button functionality here
             },
           ),
         ),
         title: Text('Add Task',
-            style:const TextStyle(color: AppColors.primaryColor)),
+            style: const TextStyle(color: AppColors.primaryColor)),
         centerTitle: true,
         toolbarHeight: 80.0,
         bottom: PreferredSize(
@@ -90,20 +88,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       ),
       body: ListView(
         shrinkWrap: true,
-        padding:const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         children: [
           TextFormField(
             cursorColor: AppColors.mutedTextColor,
             decoration: InputDecoration(
               labelText: 'Name of Client',
-              labelStyle:const TextStyle(
+              labelStyle: const TextStyle(
                 color: Color.fromRGBO(2, 6, 20, 1),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide:const BorderSide(
+                borderSide: const BorderSide(
                     color: Color.fromRGBO(15, 13, 35, 1), width: 1.0),
                 borderRadius: BorderRadius.circular(10.0),
               ),
@@ -114,14 +112,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             cursorColor: AppColors.mutedTextColor,
             decoration: InputDecoration(
               labelText: 'Date of Task',
-              labelStyle:const TextStyle(
+              labelStyle: const TextStyle(
                 color: Color.fromRGBO(2, 6, 20, 1),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide:const BorderSide(
+                borderSide: const BorderSide(
                     color: Color.fromRGBO(15, 13, 35, 1), width: 1.0),
                 borderRadius: BorderRadius.circular(10.0),
               ),
@@ -299,7 +297,6 @@ class _GridBState extends State<GridB> {
   }
 }
 
-
 class DropDownWidget extends StatefulWidget {
   const DropDownWidget({super.key});
 
@@ -309,6 +306,7 @@ class DropDownWidget extends StatefulWidget {
 
 class _DropDownWidgetState extends State<DropDownWidget> {
   String selectedvalue = 'In 24 hours';
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -338,14 +336,6 @@ class _DropDownWidgetState extends State<DropDownWidget> {
     );
   }
 }
-
-
-
-
-
-
-
-
 
 // class UserPermissionItem extends StatefulWidget {
 //   final String text;
@@ -410,72 +400,40 @@ class _DropDownWidgetState extends State<DropDownWidget> {
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // return Container(
-        //   decoration: BoxDecoration(
-        //     borderRadius: BorderRadius.circular(
-        //       1.0,
-        //     ),
-        //     color: Color.fromRGBO(236, 231, 255, 1),
-        //   ),
-        //   child: Column(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     crossAxisAlignment: CrossAxisAlignment.center,
-        //     children: [
-        //       const ClipRRect(
-        //         borderRadius: BorderRadius.only(
-        //           topLeft: Radius.circular(16.0),
-        //           topRight: Radius.circular(16.0),
-        //         ),
-        //       ),
-        //       Padding(
-        //         padding: const EdgeInsets.all(8.0),
-        //         child: Column(
-        //           crossAxisAlignment: CrossAxisAlignment.start,
-        //           children: [
-        //             Text(
-        //               "${gridMap.elementAt(index)['title']}",
-        //               textAlign: TextAlign.center,
-        //               style: Theme.of(context).textTheme.subtitle1!.merge(
-        //                     const TextStyle(
-        //                       fontWeight: FontWeight.w700,
-        //                     ),
-        //                   ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // );
-
-
-
-
-
-
-
-
-
-
+//   decoration: BoxDecoration(
+//     borderRadius: BorderRadius.circular(
+//       1.0,
+//     ),
+//     color: Color.fromRGBO(236, 231, 255, 1),
+//   ),
+//   child: Column(
+//     mainAxisAlignment: MainAxisAlignment.center,
+//     crossAxisAlignment: CrossAxisAlignment.center,
+//     children: [
+//       const ClipRRect(
+//         borderRadius: BorderRadius.only(
+//           topLeft: Radius.circular(16.0),
+//           topRight: Radius.circular(16.0),
+//         ),
+//       ),
+//       Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//               "${gridMap.elementAt(index)['title']}",
+//               textAlign: TextAlign.center,
+//               style: Theme.of(context).textTheme.subtitle1!.merge(
+//                     const TextStyle(
+//                       fontWeight: FontWeight.w700,
+//                     ),
+//                   ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     ],
+//   ),
+// );

@@ -33,7 +33,7 @@ class Validators {
       return 'Please enter password';
     } else {
       if (!_passwordRegExp.hasMatch(password)) {
-        return 'Please enter valid password';
+        return 'Password must be of length 8 or more including special character, upper case and lowercase';
       } else {
         return null;
       }

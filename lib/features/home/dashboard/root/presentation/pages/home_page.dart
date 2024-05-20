@@ -1,9 +1,6 @@
 import 'package:ca/core/network_connectivity_check/network_connectivity_provider.dart';
 import 'package:ca/core/router/routers.dart';
 import 'package:ca/features/home/dashboard/root/presentation/riverpod/user_provider.dart';
-import 'package:ca/utility/constants.dart';
-import 'package:ca/utility/shared_pref.dart';
-import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,7 +27,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     final userAsyncData = ref.watch(userDataProvider);
-    final connectivityState = ref.watch(connectivityStatusProviders);
+
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
@@ -162,7 +159,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   context.push('/${Routers.myClients}');
                                 }),
                             _buildGridItem("assets/images/payment.png",
-                                'Add Payments', () {}),
+                                'Add Payments', () {context.push('/${Routers.clientPayment}');}),
                             _buildGridItem("assets/images/mytask.png",
                                 'My Tasks', () {}),
                             _buildGridItem("assets/images/task.png",

@@ -12,6 +12,7 @@ import 'package:ca/theme/daytheme.dart';
 import 'package:ca/utility/hive_service.dart';
 import 'package:ca/utility/notification_controller.dart';
 import 'package:ca/utility/shared_pref.dart';
+import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,11 @@ void main() async {
   await NotificationController.initializeLocalNotifications();
   await NotificationController.initializeIsolateReceivePort();
   runApp(const ProviderScope(child: CaJunction()));
+  FlutterError.demangleStackTrace = (StackTrace stack) {
+    if(stack is stack_trace.Trace) return stack.vmTrace;
+    if(stack is stack_trace.Chain) return stack.toTrace().vmTrace;
+    return stack;
+  };
 
 }
 

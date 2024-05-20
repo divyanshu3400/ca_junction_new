@@ -29,4 +29,14 @@ class Routers{
   static String userRegisteredAs = 'userRegisteredAs';
   static String firmType = 'firm-type';
   static String clientProfile = 'client-profile';
+  static String clientDashboard = 'client-dashboard';
+  static String clientDownloadedData = 'client-downloadedData';
+  static String clientPaymentPackages = 'client-PaymentPackages';
+  static String clientLumpsumPackages = 'client-LumpsumPackages';
+  static String clientPayAdmin = 'client-PayAdmin';
+  static String clientIndividualServicePackages = 'client-IndividualServicePackage';
+  static String clientPaymentLegder = 'client-PaymentLedger';
+  static String clientLegder = 'client-Ledger';
+  static String changeEmail = 'changeEmail';
+  static String clientPayment = 'clientPayment';
 }
