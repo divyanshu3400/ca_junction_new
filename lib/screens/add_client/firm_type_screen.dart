@@ -38,7 +38,7 @@ class _FirmTypeScreenState extends ConsumerState<FirmTypeScreen> {
             color: AppColors.primaryColor,
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
-              context.pop();
+              context.pushReplacement('/${Routers.userRegisteredAs}');
             },
           ),
         ),
@@ -106,11 +106,36 @@ class _FirmTypeScreenState extends ConsumerState<FirmTypeScreen> {
           child: RoundedButton2(
             colour: const Color.fromRGBO(255, 255, 255, 1),
             onPressed: () async {
-              if(firmTypeAsyncValue.value!.isNotEmpty){
-                addClientData['firm_type'] = selectedFirmType;
-                _handleSubmit(addClientData);
-              }
-              else{
+              if (firmTypeAsyncValue.value!.isNotEmpty) {
+                bool proceed = await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Confirmation'),
+                      content: const Text('Do you want to proceed with the selected firm type?'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Cancel'),
+                          onPressed: () {
+                            context.pop(false); // Return false when cancelled
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Confirm'),
+                          onPressed: () {
+                            context.pop(true); // Return true when confirmed
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                if (proceed) {
+                  addClientData['firm_type'] = selectedFirmType;
+                  _handleSubmit(addClientData);
+                }
+              } else {
                 context.showSnackbarMessage("Please Select Firm Type");
               }
             },
@@ -133,8 +158,8 @@ class _FirmTypeScreenState extends ConsumerState<FirmTypeScreen> {
     );
     dynamic response = await APIServices.makePostRequest('api/create_customer/', addClientData);
     setState(() {
-      Navigator.pop(context);
       context.showSnackbarMessage(response['message']);
+      context.pop();
     });
     if(response['status'] ==200){
       setState(() {

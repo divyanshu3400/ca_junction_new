@@ -7,9 +7,9 @@ class OTPInput extends StatefulWidget {
   const OTPInput({super.key, required this.numberOfNodes, required this.onFilled});
 
   @override
-  _OTPInputState createState() => _OTPInputState();
+  OTPInputState createState() => OTPInputState();
 }
-class _OTPInputState extends State<OTPInput> {
+class OTPInputState extends State<OTPInput> {
   late List<FocusNode> _focusNodes;
   late List<TextEditingController> _controllers;
 
@@ -46,8 +46,8 @@ class _OTPInputState extends State<OTPInput> {
   }
 
   void _disposeLists() {
-    _focusNodes.forEach((node) => node.dispose());
-    _controllers.forEach((controller) => controller.dispose());
+    for (var node in _focusNodes) {node.dispose();}
+    for (var controller in _controllers) {controller.dispose();}
   }
 
   @override

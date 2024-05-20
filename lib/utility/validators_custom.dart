@@ -33,7 +33,7 @@ class Validators {
       return 'Please enter password';
     } else {
       if (!_passwordRegExp.hasMatch(password)) {
-        return 'Password must be of length 8 or more including special character, upper case and lowercase';
+        return 'Please enter valid password';
       } else {
         return null;
       }
@@ -44,9 +44,9 @@ class Validators {
     if (name == null || name.isEmpty) {
       return 'Please enter name';
     } else {
-        return null;
-      }
+      return null;
     }
+  }
   static String? isValidGSTNumber(String? gstNumber) {
     if (gstNumber == null || gstNumber.isEmpty) {
       return 'Please enter GST number';

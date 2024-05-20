@@ -1,22 +1,27 @@
 import 'package:ca/components/rounded_button.dart';
+import 'package:ca/core/network_connectivity_check/network_connectivity_provider.dart';
+import 'package:ca/core/network_connectivity_check/network_connectivity_state.dart';
 import 'package:ca/theme/daytheme.dart';
 import 'package:ca/utility/constants.dart';
 import 'package:ca/utility/shared_pref.dart';
 import 'package:ca/utility/ui_utils.dart';
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../core/router/routers.dart';
 import '../utility/api_request.dart';
 import '../utility/custom_loader.dart';
 
-class ChangePasswordScreen extends StatefulWidget {
+class ChangePasswordScreen extends ConsumerStatefulWidget {
   const ChangePasswordScreen({super.key});
 
   @override
-  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
+  ConsumerState<ChangePasswordScreen> createState() =>
+      _ChangePasswordScreenState();
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   bool passwordShow = true;
   TextEditingController passwordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
@@ -24,7 +29,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    Future(() {
+      ref.read(connectivityStatusProviders.notifier).checkStatus();
+    });
+    super.initState();
+
+  }
+  @override
+  void dispose() {
+    ref.read(connectivityStatusProviders.notifier).dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final connectivity = ref.watch(connectivityStatusProviders);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -48,13 +69,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                 ),
                 const SizedBox(height: 162), // Adjust height as needed
-                TextField(
+                TextFormField(
                   controller: passwordController,
+                  validator: Validators.isValidPassword,
                   decoration: InputDecoration(
                     labelText: 'Enter new password',
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
                       onPressed: () {
                         setState(() {
@@ -65,14 +89,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                   obscureText: !_isPasswordVisible,
                 ),
-                const SizedBox(height: 30,),
-                TextField(
+                const SizedBox(
+                  height: 30,
+                ),
+                TextFormField(
                   controller: newPasswordController,
+                  validator: Validators.isValidPassword,
                   decoration: InputDecoration(
                     labelText: 'Re-Enter new password',
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
                       onPressed: () {
                         setState(() {
@@ -95,17 +124,27 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             RoundedButton(
               colour: AppColors.primaryColor,
               onPressed: () {
-                if(_formKey.currentState!.validate()){
-                  if(passwordController.text.toString().trim()==newPasswordController.text.toString().trim())
-                    {
+                if (_formKey.currentState!.validate()) {
+                  if (passwordController.text.toString().trim() ==
+                      newPasswordController.text.toString().trim()) {
+                    if (connectivity.connectivityStatus ==
+                        ConnectivityStatus.isConnected) {
                       String email = SharedPref.getString(userEmail) ?? "";
-                      Map<String,dynamic> data = {
-                        "email":email,
-                        "new_password":passwordController.text.toString(),
-                        "confirm_password":newPasswordController.text.toString().trim(),
+                      Map<String, dynamic> data = {
+                        "email": email,
+                        "new_password": passwordController.text.toString(),
+                        "confirm_password":
+                            newPasswordController.text.toString().trim(),
                       };
-                      setPassword('api/set-password/',data,'Changing password...');
+                      setPassword(
+                          'api/set-password/', data, 'Changing password...');
                     }
+                  }
+                  else{
+                    setState(() {
+                      context.showSnackbarMessage('Internet Required');
+                    });
+                  }
                 }
               },
               title: 'Save',
@@ -129,7 +168,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Future<void> setPassword(
-      String endpoint, Map<String, dynamic> data,String message) async {
+      String endpoint, Map<String, dynamic> data, String message) async {
     showDialog(
       context: context,
       barrierDismissible: false,

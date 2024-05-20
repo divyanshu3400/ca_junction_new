@@ -63,7 +63,7 @@ class ClientModel {
       sync: json['sync'],
       role: json['role'],
       admin: json['admin'],
-      clientData: json['client_data'] != null ? jsonEncode(json['client_data']) : null, // Encode ClientData as JSON string
+      clientData: json['client_data'] != null ? jsonEncode(json['client_data']) : jsonEncode(json['admin_client']), // Encode ClientData as JSON string
     );
   }
   // Add method to decode JSON string to ClientData object

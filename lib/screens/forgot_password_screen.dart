@@ -1,24 +1,27 @@
 import 'dart:async';
+import 'package:ca/core/network_connectivity_check/network_connectivity_state.dart';
 import 'package:ca/core/router/routers.dart';
 import 'package:ca/utility/constants.dart';
 import 'package:ca/utility/shared_pref.dart';
 import 'package:ca/utility/ui_utils.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../components/rounded_button.dart';
+import '../core/network_connectivity_check/network_connectivity_provider.dart';
 import '../theme/daytheme.dart';
 import '../utility/api_request.dart';
 import '../utility/custom_loader.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _SendEmailOTPState();
+  ConsumerState<ForgotPasswordScreen> createState() => _SendEmailOTPState();
 }
 
-class _SendEmailOTPState extends State<ForgotPasswordScreen> {
+class _SendEmailOTPState extends ConsumerState<ForgotPasswordScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController otpController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -50,7 +53,24 @@ class _SendEmailOTPState extends State<ForgotPasswordScreen> {
   }
 
   @override
+  void initState() {
+    Future(() {
+      ref.read(connectivityStatusProviders.notifier).checkStatus();
+    });
+    super.initState();
+
+  }
+  @override
+  void dispose() {
+    ref.read(connectivityStatusProviders.notifier).dispose();
+    super.dispose();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
+    final connectivity = ref.watch(connectivityStatusProviders);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -127,17 +147,22 @@ class _SendEmailOTPState extends State<ForgotPasswordScreen> {
                     String email = emailController.text.toString().trim();
                     String otp = otpController.text.toString().trim();
                     if (_formKey.currentState!.validate()) {
-                      if (isOTPReceived) {
-                        Map<String, dynamic> data = {
-                          'email': email,
-                          'otp': otp,
-                        };
-                        verifyOTP('api/verify-email-otp/', data,"Verifying OTP...");
-                      } else {
-                        Map<String, dynamic> data = {
-                          'email': email,
-                        };
-                        sendOTP('api/send-email-otp/', data,"Sending OTP...");
+                      if(connectivity.connectivityStatus == ConnectivityStatus.isConnected){
+                        if (isOTPReceived) {
+                          Map<String, dynamic> data = {
+                            'email': email,
+                            'otp': otp,
+                          };
+                          verifyOTP('api/verify-email-otp/', data,"Verifying OTP...");
+                        } else {
+                          Map<String, dynamic> data = {
+                            'email': email,
+                          };
+                          sendOTP('api/send-email-otp/', data,"Sending OTP...");
+                        }
+                      }
+                      else{
+                        context.showSnackbarMessage('Internet Required');
                       }
                     }
                   },

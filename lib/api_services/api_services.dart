@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ca/models/client_model.dart';
 import 'package:ca/models/registration_type_model.dart';
 import 'package:ca/models/role_model.dart';
 import 'package:ca/utility/constants.dart';
@@ -28,7 +29,7 @@ class APIServices{
       await DatabaseService.database.registrationTypeDao.insertAllRegistrationTypes(roles);
       return roles;
     } else {
-      throw Exception('Failed to load roles from server');
+      throw Exception('Failed to load registration type from server');
     }
   }
 
@@ -74,6 +75,39 @@ class APIServices{
       return json.decode(response.body);
     } catch (error) {
       throw error.toString();
+    }
+  }
+
+  static Future<dynamic> pushNotification(String endPoint,Map<String,dynamic> data,String authToken) async {
+    String apiUrl = '$BASE_URL$endPoint/';
+    try {
+      final http.Response response = await http.post(
+        Uri.parse(apiUrl),
+        body: json.encode(data),
+        headers: <String, String>{'Content-Type': 'application/json',
+          'Authorization': 'Token $authToken',
+        },
+      );
+      return json.decode(response.body);
+    } catch (error) {
+      throw error.toString();
+    }
+  }
+
+  static Future<ClientModel> fetchClientData(String authToken) async {
+    const String apiUrl = '${BASE_URL}api/client-detail/';
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: <String, String>{'Content-Type': 'application/json',
+        'Authorization': 'Token $authToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      final dynamic clientsData = jsonDecode(response.body);
+      ClientModel clientDataModel = ClientModel.fromJson(clientsData);
+      return clientDataModel;
+    } else {
+      throw Exception('Failed to load clients');
     }
   }
 }

@@ -37,7 +37,7 @@ class _UserRegisteredAsScreenState extends ConsumerState<UserRegisteredAsScreen>
             color: AppColors.primaryColor,
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
-              context.pop();
+              context.pushReplacement('/${Routers.myClients}');
             },
           ),
         ),
@@ -111,7 +111,7 @@ class _UserRegisteredAsScreenState extends ConsumerState<UserRegisteredAsScreen>
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    context.pop();
+                    context.pushReplacement('/${Routers.userRegisteredAs}');
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white70,
@@ -127,12 +127,37 @@ class _UserRegisteredAsScreenState extends ConsumerState<UserRegisteredAsScreen>
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    if(selectedRegTypes.isNotEmpty){
-                      addClientData["registration_types"] = selectedRegTypes;
-                      HiveService().putData(userDataKey, addClientData);
-                      context.push('/${Routers.firmType}');
-                    }
-                    else{
+                    if (selectedRegTypes.isNotEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmation'),
+                            content: const Text('Do you want to proceed with the selected registration types?'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Cancel'),
+                                onPressed: () {
+                                  context.pop(false); // Return false when cancelled
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Confirm'),
+                                onPressed: () {
+                                  context.pop(true); // Return true when confirmed
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      ).then((proceed) {
+                        if (proceed) {
+                          addClientData["registration_types"] = selectedRegTypes;
+                          HiveService().putData(userDataKey, addClientData);
+                          context.pushReplacement('/${Routers.firmType}');
+                        }
+                      });
+                    } else {
                       context.showSnackbarMessage("Please select registration type");
                     }
                   },

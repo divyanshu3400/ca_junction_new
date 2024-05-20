@@ -19,8 +19,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
       Timer(const Duration(seconds: 1), () {
         bool? isLoggedIn = SharedPref.getBool(iSLOGGEDIN);
+        String? role = SharedPref.getString(userRole);
         if(isLoggedIn!=null && isLoggedIn){
-          context.go('/${Routers.home}');
+          role == 'admin' ? context.go('/${Routers.home}') : context.go('/${Routers.clientHome}');
         }
         else{
           context.pushReplacement('/${Routers.onBoarding}');
