@@ -117,7 +117,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ClientModel` (`id` INTEGER NOT NULL, `password` TEXT NOT NULL, `lastLogin` TEXT, `isSuperuser` INTEGER NOT NULL, `username` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `email` TEXT NOT NULL, `isStaff` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `dateJoined` TEXT NOT NULL, `dob` TEXT, `phoneNumber` TEXT, `isAccepted` INTEGER NOT NULL, `sync` INTEGER NOT NULL, `role` TEXT NOT NULL, `admin` INTEGER, `clientData` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `ClientDataModel` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `email` TEXT NOT NULL, `password` TEXT NOT NULL, `isSuperuser` INTEGER NOT NULL, `isStaff` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `dateJoined` TEXT NOT NULL, `dob` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `isAccepted` INTEGER NOT NULL, `sync` INTEGER NOT NULL, `role` TEXT NOT NULL, `admin` INTEGER NOT NULL, `adminClientJson` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `ClientDataModel` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `email` TEXT NOT NULL, `password` TEXT NOT NULL, `isSuperuser` INTEGER NOT NULL, `isStaff` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, `dateJoined` TEXT, `dob` TEXT, `phoneNumber` TEXT, `isAccepted` INTEGER NOT NULL, `sync` INTEGER NOT NULL, `role` TEXT, `admin` INTEGER NOT NULL, `adminClientJson` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -1203,12 +1203,12 @@ class _$ClientDataDao extends ClientDataDao {
             isSuperuser: (row['isSuperuser'] as int) != 0,
             isStaff: (row['isStaff'] as int) != 0,
             isActive: (row['isActive'] as int) != 0,
-            dateJoined: row['dateJoined'] as String,
-            dob: row['dob'] as String,
-            phoneNumber: row['phoneNumber'] as String,
+            dateJoined: row['dateJoined'] as String?,
+            dob: row['dob'] as String?,
+            phoneNumber: row['phoneNumber'] as String?,
             isAccepted: (row['isAccepted'] as int) != 0,
             sync: (row['sync'] as int) != 0,
-            role: row['role'] as String,
+            role: row['role'] as String?,
             admin: row['admin'] as int,
             adminClientJson: row['adminClientJson'] as String));
   }
@@ -1226,12 +1226,12 @@ class _$ClientDataDao extends ClientDataDao {
             isSuperuser: (row['isSuperuser'] as int) != 0,
             isStaff: (row['isStaff'] as int) != 0,
             isActive: (row['isActive'] as int) != 0,
-            dateJoined: row['dateJoined'] as String,
-            dob: row['dob'] as String,
-            phoneNumber: row['phoneNumber'] as String,
+            dateJoined: row['dateJoined'] as String?,
+            dob: row['dob'] as String?,
+            phoneNumber: row['phoneNumber'] as String?,
             isAccepted: (row['isAccepted'] as int) != 0,
             sync: (row['sync'] as int) != 0,
-            role: row['role'] as String,
+            role: row['role'] as String?,
             admin: row['admin'] as int,
             adminClientJson: row['adminClientJson'] as String));
   }
@@ -1259,12 +1259,12 @@ class _$ClientDataDao extends ClientDataDao {
             isSuperuser: (row['isSuperuser'] as int) != 0,
             isStaff: (row['isStaff'] as int) != 0,
             isActive: (row['isActive'] as int) != 0,
-            dateJoined: row['dateJoined'] as String,
-            dob: row['dob'] as String,
-            phoneNumber: row['phoneNumber'] as String,
+            dateJoined: row['dateJoined'] as String?,
+            dob: row['dob'] as String?,
+            phoneNumber: row['phoneNumber'] as String?,
             isAccepted: (row['isAccepted'] as int) != 0,
             sync: (row['sync'] as int) != 0,
-            role: row['role'] as String,
+            role: row['role'] as String?,
             admin: row['admin'] as int,
             adminClientJson: row['adminClientJson'] as String),
         arguments: [id],

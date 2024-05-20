@@ -2,6 +2,7 @@ import 'package:ca/components/client/riverpod/client_provider.dart';
 import 'package:ca/riverpod/registration_type_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../utility/ui_utils.dart';
 
 class ClientDashboardScreen extends ConsumerStatefulWidget {
@@ -104,12 +105,12 @@ class _ClientDashboardScreenState extends ConsumerState<ClientDashboardScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
+                Text(
                   'My Folders',
                   style: TextStyle(
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w500,
-                    fontSize: 18,
+                    fontSize: 14.h,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -172,11 +173,11 @@ class _ClientDashboardScreenState extends ConsumerState<ClientDashboardScreen> {
 
 Widget gridWithIcon(String title, String subtitle, bool flag) {
   return Container(
-    width: 183,
-    height: 130,
-    padding: const EdgeInsets.all(5),
+    width: 130.h,
+    height: 100.h,
+    padding: EdgeInsets.all(5.h),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(16.0),
+      borderRadius: BorderRadius.circular(8.h),
       color: flag
           ? const Color.fromARGB(75, 3, 168, 244).withOpacity(0.1)
           : const Color.fromARGB(124, 255, 235, 59).withOpacity(0.3),
@@ -185,10 +186,10 @@ Widget gridWithIcon(String title, String subtitle, bool flag) {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const ClipRRect(
+        ClipRRect(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+            topLeft: Radius.circular(16.h),
+            topRight: Radius.circular(16.h),
           ),
         ),
         Padding(
@@ -209,8 +210,8 @@ Widget gridWithIcon(String title, String subtitle, bool flag) {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 10,
+              SizedBox(
+                height: 10.h,
               ),
               Text(
                 title,
@@ -218,8 +219,8 @@ Widget gridWithIcon(String title, String subtitle, bool flag) {
                   color: flag ? Colors.blue : Colors.orange,
                 ),
               ),
-              const SizedBox(
-                height: 3,
+              SizedBox(
+                height: 3.h,
               ),
               Text(
                 subtitle,
@@ -383,8 +384,8 @@ class ProfileWidget extends StatelessWidget {
                   alignment: Alignment.center,
                   children: [
                     SizedBox(
-                      width: 100,
-                      height: 100,
+                      width: 90.h,
+                      height: 90.h,
                       child: CircularProgressIndicator(
                         value: profileCompletionPercentage / 100,
                         strokeWidth: 8.0,
@@ -412,11 +413,11 @@ class ProfileWidget extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 10,
+                top: 10.h,
                 right: 0,
                 child: Container(
-                  height: 25,
-                  width: 50,
+                  height: 20.h,
+                  width: 40.h,
                   decoration: const BoxDecoration(
                     color: Colors.blue,
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),

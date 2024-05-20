@@ -92,10 +92,9 @@ class _MyAppState extends ConsumerState<CaJunction> {
   }
 }
 
-
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   _handleMessage(message);
-
 }
 
 void _handleMessage(RemoteMessage message) {

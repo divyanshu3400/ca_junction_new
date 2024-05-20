@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ca/core/network_connectivity_check/network_connectivity_state.dart';
+import 'package:core/core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ConnectivityStatusNotifier extends Notifier<ConnectivityState> {
@@ -15,10 +16,10 @@ class ConnectivityStatusNotifier extends Notifier<ConnectivityState> {
       if (event == ConnectivityResult.mobile ||
           event == ConnectivityResult.wifi) {
         state = ConnectivityState.initial();
-        // Log.debug('internet connected');
+        Log.debug('internet connected');
       } else if (event == ConnectivityResult.none) {
         state = ConnectivityState.disconnected();
-        // Log.debug('no internet connection');
+        Log.debug('no internet connection');
       }
     });
   }

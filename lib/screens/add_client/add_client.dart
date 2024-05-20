@@ -1,4 +1,3 @@
-import 'package:ca/features/home/dashboard/root/presentation/riverpod/user_provider.dart';
 import 'package:ca/models/district_model.dart';
 import 'package:ca/models/state_model.dart';
 import 'package:ca/screens/add_client/gst_input.dart';
@@ -8,7 +7,7 @@ import 'package:ca/screens/add_client/riverpod/state_value_provider.dart';
 import 'package:ca/utility/constants.dart';
 import 'package:ca/utility/hive_service.dart';
 import 'package:ca/utility/ui_utils.dart';
-import 'package:core/core.dart';
+import 'package:ca/utility/validators_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,8 +15,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import '../../core/constant/text_style.dart';
 import '../../core/router/routers.dart';
+import '../../features/home/dashboard/root/presentation/riverpod/user_provider.dart';
+import '../../models/user_model.dart';
 import '../../theme/daytheme.dart';
 import '../../theme/dimens.dart';
+import '../../utility/base_state.dart';
 import '../../utility/dropdown.dart';
 import '../Tasks/addTask_Screen.dart';
 import 'package:intl/intl.dart';
@@ -32,17 +34,25 @@ class AddNewUserScreen extends ConsumerStatefulWidget {
 
 class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
   final GlobalKey<GSTNumberInputState> _gstKey = GlobalKey<GSTNumberInputState>();
-
+  int adminId = 0;
   String userPhoneNumber = '';
   String isoCode = 'IN';
   String countryCode = '+91';
+
+  @override
+  void initState() {
+    Future(() {
+      ref.read(userDataNotifierProvider.notifier).fetchUserDataAPI();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final notifier = ref.watch(addClientStateProvider.notifier);
     final statesAsyncValue = ref.watch(statesProvider);
     final districtsAsyncValue = ref.watch(districtsProvider);
-    final userAsyncValue = ref.watch(userDataProvider);
+
 
     return Scaffold(
       appBar: AppBar(
@@ -147,7 +157,6 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
                     ), // Customize border properties as needed
                     borderRadius: BorderRadius.circular(
                         4), // Adjust border radius as needed
-                    // color: const Color.fromRGBO(245, 245, 245, 1),
                   ),
                   child: InternationalPhoneNumberInput(
                     onInputChanged: (value) {
@@ -324,19 +333,26 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                        child: userAsyncValue.when(
-                          data: (data) {
-                            return TextFormField(
-                              readOnly: true,
-                              decoration: kinputBorderDecoration('Admin ID'),
-                              initialValue: data.username,
-                            );
+                        child: Consumer(
+                          builder: (context, watch, child) {
+                            final state = watch.watch(userDataNotifierProvider);
+                            if (state.status == Status.loading) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (state.status == Status.error) {
+                              return Center(child: Text('${state.message}'));
+                            } else if (state.status == Status.success) {
+                              User? user = state.data;
+                              adminId = user!.id;
+                              return TextFormField(
+                                readOnly: true,
+                                decoration: kinputBorderDecoration('Admin ID'),
+                                initialValue: user.username,
+                              );
+                            }
+                            return Container();
                           },
-                          loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                          error: (error, stackTrace) =>
-                              Center(child: Text('Error: $error')),
-                        )),
+                        )
+                    ),
                   ],
                 ),
                 // SizedBox(height: 20),
@@ -371,7 +387,7 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
                             },
                           ),
                           TextButton(
-                            child: const Text('Confirm'),
+                            child: Text('Confirm'),
                             onPressed: () {
                               context.pop(true);
                             },
@@ -396,7 +412,7 @@ class AddNewUserScreenState extends ConsumerState<AddNewUserScreen> {
                     }
                     Map<String, dynamic> addClientData = {
                       "first_name": firstName,
-                      "admin_id": userAsyncValue.value?.id,
+                      "admin_id": adminId,
                       "username": '$firstName$randomNumber',
                       "last_name": lastName,
                       "email":

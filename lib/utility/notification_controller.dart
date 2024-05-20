@@ -68,24 +68,24 @@ class NotificationController {
   ///     NOTIFICATION EVENTS
   ///  *********************************************
 
-
   @pragma('vm:entry-point')
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
     if (receivedAction.actionType == ActionType.SilentAction ||
         receivedAction.actionType == ActionType.SilentBackgroundAction) {
       // For background actions, you must hold the execution until the end
-      print('Message sent via notification input: "${receivedAction.buttonKeyInput}"');
+      // print('Message sent via notification input: "${receivedAction.buttonKeyInput}"');
       await executeLongTaskInBackground();
     } else {
       // this process is only necessary when you need to redirect the user
       // to a new page or use a valid context, since parallel isolates do not
       // have valid context, so you need redirect the execution to main isolate
       if (receivePort == null) {
-        print('onActionReceivedMethod was called inside a parallel dart isolate.');
+        // print('onActionReceivedMethod was called inside a parallel dart isolate.');
         SendPort? sendPort =
         IsolateNameServer.lookupPortByName('notification_action_port');
-        if (sendPort != null) {print('Redirecting the execution to main isolate process.');
+        if (sendPort != null) {
+          // print('Redirecting the execution to main isolate process.');
           sendPort.send(receivedAction);
           return;
         }

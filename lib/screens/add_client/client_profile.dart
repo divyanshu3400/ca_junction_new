@@ -54,7 +54,7 @@ class ClientProfileScreenState extends ConsumerState<ClientProfileScreen> {
           style: TextStyle(color: AppColors.primaryColor),
         ),
         centerTitle: true,
-        toolbarHeight: 80.0,
+        toolbarHeight: 60.h,
         actions: [IconButton(
             onPressed: () async {
           ClientModel cl = await getClient();
@@ -129,10 +129,10 @@ class ClientProfileScreenState extends ConsumerState<ClientProfileScreen> {
                                   ],
                                 ),
                                 SizedBox(height: 4.h),
-                                const Text(
+                                Text(
                                   "80 %",
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16.h,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
@@ -146,24 +146,24 @@ class ClientProfileScreenState extends ConsumerState<ClientProfileScreen> {
                               children: [
                                 Text(
                                   '${snapshot.data?.firstName} ${snapshot.data?.lastName}',
-                                  style: const TextStyle(
-                                    fontSize: 20,
+                                  style: TextStyle(
+                                    fontSize: 16.h,
                                     color: Colors.black,
                                   ),
                                 ),
                                 Text(
                                   snapshot.data?.getClientData()?.nameOfFirm ?? "",
-                                  style: const TextStyle(
-                                    fontSize: 16,
+                                  style: TextStyle(
+                                    fontSize: 12.h,
                                     color: Colors.black,
                                   ),
                                 ),
                               ],
                             ),
-                            const Text(
+                            Text(
                               "#563",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 16.h,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
@@ -198,8 +198,8 @@ class ClientProfileScreenState extends ConsumerState<ClientProfileScreen> {
                                 SizedBox(width: 10.h),
                                 Text(
                                   '${snapshot.data?.phoneNumber}',
-                                  style: const TextStyle(
-                                    fontSize: 16,
+                                  style: TextStyle(
+                                    fontSize: 14.h,
                                     color: Colors.black,
                                   ),
                                 ),

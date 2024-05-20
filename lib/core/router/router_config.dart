@@ -32,7 +32,7 @@ final GlobalKey<NavigatorState> _shellState = GlobalKey(debugLabel: 'shell');
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/${Routers.home}',
+    initialLocation: '/${Routers.splashScreen}',
     navigatorKey: _rootState,
     routes: [
       GoRoute(
@@ -63,7 +63,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/${Routers.onBoarding}',
         name: Routers.onBoarding,
-        builder: (context, state) => const OnboardingScreen1(),
+        builder: (context, state) => OnboardingScreen1(key: state.pageKey,),
       ),
       GoRoute(
         path: '/${Routers.signUp}',
@@ -207,7 +207,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state, child) => MainPage(key: state.pageKey, child: child),
         routes: [
           GoRoute(
-            name: Routers.home,
+            name: Routers.homeShell,
             path: '/${Routers.home}',
             pageBuilder: (context, state) {
               return NoTransitionPage(

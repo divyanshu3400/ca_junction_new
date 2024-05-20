@@ -67,7 +67,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     final rolesAsyncValue = ref.watch(rolesProvider);
     final connectivity = ref.watch(connectivityStatusProviders);
-
+    print(connectivity.connectivityStatus);
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -336,7 +336,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-
                     context.go('/${Routers.signIn}');
                   },
                   child: const Text(
@@ -381,7 +380,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     };
     var response = await postRequest('api/create-user', formData);
     setState(() {
-      Navigator.pop(context);
+      context.pop();
       if (response != null && response['status'] == 201) {
         SharedPref.storeBool(iSLOGGEDIN, true);
         SharedPref.storeInt(userId, response['data']['id']);

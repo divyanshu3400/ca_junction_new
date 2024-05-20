@@ -12,12 +12,10 @@ final registrationTypeProvider =
   final state = ref.read(connectivityStatusProviders);
   if (state.connectivityStatus == ConnectivityStatus.isConnected) {
     try {
-      final List<RegistrationType> roles =
-          await APIServices.fetchRegistrationType();
+      final List<RegistrationType> roles = await APIServices.fetchRegistrationType();
       return roles;
     } catch (e) {
-      return await DatabaseService.database.registrationTypeDao
-          .findAllRegistrationTypes();
+      return await DatabaseService.database.registrationTypeDao.findAllRegistrationTypes();
     }
   } else {
     return await DatabaseService.database.registrationTypeDao
