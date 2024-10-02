@@ -24,6 +24,9 @@ import 'package:ca/screens/splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../components/admin/payment/clients_list_for_payment.dart';
+import '../../components/client/screen/clientRegistration.dart';
+import '../../components/client/screen/profile.dart';
 import '../../screens/add_client/user_registered_as.dart';
 import '../../screens/signup.dart';
 
@@ -33,6 +36,7 @@ final GlobalKey<NavigatorState> _shellState = GlobalKey(debugLabel: 'shell');
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/${Routers.splashScreen}',
+    // initialLocation: '/${Routers.clientRegist|ration}',
     navigatorKey: _rootState,
     routes: [
       GoRoute(
@@ -105,6 +109,21 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             return PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 300),
               pageBuilder: (_, __, ___) => MyClientScreen(key: state.pageKey),
+              transitionsBuilder: (_, animation, __, child) {
+                return FadeTransition(opacity: animation, child: child,);
+              },
+            );
+          },
+        ),
+      ),
+      GoRoute(
+        path: '/${Routers.clientPayment}',
+        name: Routers.clientPayment,
+        builder: (context, state) => Navigator(
+          onGenerateRoute: (settings) {
+            return PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 300),
+              pageBuilder: (_, __, ___) => MyClientPaymentScreen(key: state.pageKey),
               transitionsBuilder: (_, animation, __, child) {
                 return FadeTransition(opacity: animation, child: child,);
               },
@@ -202,12 +221,22 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: Routers.userRegistration,
         builder: (context, state) =>const AddNewUserScreen(),
       ),
+      GoRoute(
+        path: '/${Routers.userProfile}',
+        name: Routers.userProfile,
+        builder: (context, state) =>const UserProfile(),
+      ),
+      GoRoute(
+        path: '/${Routers.clientRegistration}',
+        name: Routers.clientRegistration,
+        builder: (context, state) =>const ClientRegistration(),
+      ),
       ShellRoute(
         navigatorKey: _shellState,
         builder: (context, state, child) => MainPage(key: state.pageKey, child: child),
         routes: [
           GoRoute(
-            name: Routers.homeShell,
+            name: Routers.home,
             path: '/${Routers.home}',
             pageBuilder: (context, state) {
               return NoTransitionPage(

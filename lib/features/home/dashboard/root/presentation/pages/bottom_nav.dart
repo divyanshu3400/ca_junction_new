@@ -61,12 +61,15 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
     switch (index) {
       case 0:
         role=='admin' ? context.go('/${Routers.home}') : context.go('/${Routers.clientHome}');
+        // context.go('/${Routers.home}');
         break;
       case 1:
         role=='admin' ? context.go('/${Routers.support}') : context.go('/${Routers.clientSupport}');
         break;
       case 2:
-        role=='admin' ? context.go('/${Routers.profile}') : context.go('/${Routers.clientProfileB}');
+        // role=='admin' ? context.go('/${Routers.profile}') : context.go('/${Routers.clientProfileB}');
+        // context.go('/${Routers.clientProfileB}');
+        context.go('/${Routers.userProfile}');
         break;
       case 3:
         role=='admin' ? context.go('/${Routers.more}') : context.go('/${Routers.clientMore}');

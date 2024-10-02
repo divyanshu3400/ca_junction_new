@@ -10,6 +10,7 @@ import '../../theme/daytheme.dart';
 
 class TasksScreen extends StatefulWidget {
   static const String id = 'task_screen';
+
   @override
   State<TasksScreen> createState() => _TasksScreenState();
 }
@@ -99,9 +100,10 @@ class _TasksScreenState extends State<TasksScreen> {
             items: _bottomNavBarItems,
             currentIndex: _selectedIndex,
             showUnselectedLabels: true,
-            selectedItemColor:
-                AppColors.primaryColor, // Change the color to your preference
-            unselectedItemColor: Colors.grey, // Set the unselected item color
+            selectedItemColor: AppColors.primaryColor,
+            // Change the color to your preference
+            unselectedItemColor: Colors.grey,
+            // Set the unselected item color
             onTap: _onNavBarItemTapped,
           ),
         ],
@@ -160,70 +162,69 @@ class _GridBState extends State<GridB> {
       itemCount: gridMap.length,
       itemBuilder: (_, index) {
         if (index == gridMap.length - 1) {
-            return GestureDetector(
-              onTap: () {
-                //Add Skip logic here
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    transitionDuration:
-                        const Duration(milliseconds: 400),
-                    pageBuilder: (_, __, ___) => AddTaskScreen(),
-                    transitionsBuilder: (_, animation, __, child) {
-                      return SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(1.0, 0.0),
-                          end: Offset.zero,
-                        ).animate(animation),
-                        child: child,
-                      );
-                    },
+          return GestureDetector(
+            onTap: () {
+              //Add Skip logic here
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 400),
+                  pageBuilder: (_, __, ___) => AddTaskScreen(),
+                  transitionsBuilder: (_, animation, __, child) {
+                    return SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(1.0, 0.0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Box shaped image
+                Container(
+                  width: 200, // Adjust width as needed
+                  height: 200, // Adjust height as needed
+                  child: Image.asset(
+                    'assets/images/addTaskBox.png', // Path to your image asset
+                    fit: BoxFit.contain, // Adjust the fit as needed
                   ),
-                );
-              },
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Box shaped image
-                  Container(
-                    width: 200, // Adjust width as needed
-                    height: 200, // Adjust height as needed
-                    child: Image.asset(
-                      'assets/images/addTaskBox.png', // Path to your image asset
-                      fit: BoxFit.contain, // Adjust the fit as needed
+                ),
+                // Title text
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Image.asset(
+                        //   'assets/images/Vector (1).png',
+                        //   width: 15.0,
+                        //   height: 15.0,
+                        // ),
+                        Icon(
+                          Icons.add,
+                        ),
+                        Text(
+                          "${gridMap.elementAt(index)['title']}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            fontFamily: 'Poppins', // Adjust font size as needed
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  // Title text
-                  Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Image.asset(
-                          //   'assets/images/Vector (1).png',
-                          //   width: 15.0,
-                          //   height: 15.0,
-                          // ),
-                          Icon(
-                            Icons.add,
-                          ),
-                          Text(
-                            "${gridMap.elementAt(index)['title']}",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                              fontFamily: 'Poppins', // Adjust font size as needed
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
+                ),
+              ],
+            ),
+          );
         } else {
           return Container(
             decoration: BoxDecoration(
@@ -250,11 +251,6 @@ class _GridBState extends State<GridB> {
                       Text(
                         "${gridMap.elementAt(index)['title']}",
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.subtitle1!.merge(
-                              const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
                       ),
                     ],
                   ),

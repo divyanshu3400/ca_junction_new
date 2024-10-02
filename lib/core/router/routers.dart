@@ -42,4 +42,6 @@ class Routers{
   static String clientLegder = 'client-Ledger';
   static String changeEmail = 'changeEmail';
   static String clientPayment = 'clientPayment';
+  static String userProfile = 'userProfile';
+  static String clientRegistration = 'ClientRegistration';
 }

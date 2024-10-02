@@ -346,12 +346,6 @@ class _OtpFormState extends State<OtpForm> {
                   }
                 }
               },
-              style: Theme.of(context).textTheme.headline6!.copyWith(
-                color: textFieldColor,
-                fontSize: 32,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w400,
-              ),
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: themeprovider.getOtpFieldColor),

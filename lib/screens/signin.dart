@@ -100,7 +100,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         borderRadius: BorderRadius.circular(10),
                         fillColor: const Color(0xfffafafa),
                         textEditingController: emailController,
-                        validator: Validators.isValidName,
+                        // validator: Validators.isValidName,
                         hintTextStyle: AppTextStyle.textStyleOne(
                           const Color(0xffC4C5C4),
                           14,
@@ -121,7 +121,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         password: EnabledPassword(),
                         obscuringCharacter: '*',
                         textEditingController: passwordController,
-                        validator: Validators.isValidPassword,
+                        // validator: Validators.isValidPassword,
                         hintTextStyle: AppTextStyle.textStyleOne(
                           const Color(0xffC4C5C4),
                           14,
@@ -164,16 +164,18 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   if (_formKey.currentState!.validate()) {
                     if (connectivity.connectivityStatus ==
                         ConnectivityStatus.isConnected) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        // Prevent user from dismissing dialog
-                        builder: (BuildContext context) {
-                          return const CustomLoaderDialog(
-                              message: 'Logging in...');
-                        },
-                      );
-                      authenticateUser();
+                      // showDialog(
+                      //   context: context,
+                      //   barrierDismissible: false,
+                      //   // Prevent user from dismissing dialog
+                      //   builder: (BuildContext context) {
+                      //     return const CustomLoaderDialog(
+                      //         message: 'Logging in...');
+                      //   },
+                      // );
+                      // authenticateUser();
+                      context.go('/${Routers.home}');
+                      // context.go('/${Routers.clientHome}');
                     } else {
                       context.showSnackbarMessage("Internet Required");
                     }

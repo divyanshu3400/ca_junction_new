@@ -29,7 +29,6 @@ class ClientDataNotifier extends Notifier<BaseState<List<ClientModel>>> {
     state = state.copyWith(status: Status.loading);
     final connectivityStatus = ref.read(connectivityStatusProviders);
     String? userToken = SharedPref.getString(token);
-
     try {
       List<ClientModel> clients = [];
       if (connectivityStatus.connectivityStatus == ConnectivityStatus.isConnected) {

@@ -13,6 +13,7 @@ final statesProvider = FutureProvider<List<StateModel>>((ref) async {
       if (data is List<dynamic>) {
         final List<StateModel> states =
             data.map((statesJson) => StateModel.fromJson(statesJson)).toList();
+        await DatabaseService.database.stateDao.deleteAllStates();
         await DatabaseService.database.stateDao.insertStates(states);
         return states;
       } else {

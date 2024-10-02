@@ -144,11 +144,7 @@ class _GridBState extends State<GridB> {
                     Text(
                       "${gridMap.elementAt(index)['title']}",
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.subtitle1!.merge(
-                        const TextStyle(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+
                     ),
                     
                   ],

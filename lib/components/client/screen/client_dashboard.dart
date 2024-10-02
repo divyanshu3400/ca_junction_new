@@ -17,7 +17,7 @@ class _ClientDashboardScreenState extends ConsumerState<ClientDashboardScreen> {
   @override
   void initState() {
     super.initState();
-    requestNotificationPermission(context);
+    // requestNotificationPermission(context);
   }
 
   int profileCompletionPercentage = 88;
@@ -68,38 +68,61 @@ class _ClientDashboardScreenState extends ConsumerState<ClientDashboardScreen> {
                       color: Colors.white70,
                     ),
                     width: double.infinity,
-                    child: userAsyncData.when(
-                      data: (data) {
-                        return Column(
-                          children: [
-                            ProfileWidget(
-                              profileCompletionPercentage:
-                                  profileCompletionPercentage,
-                            ),
-                            Text(
-                              '${data?.firstName} ${data?.lastName}',
-                              style: const TextStyle(
-                                  fontSize: 25, color: Colors.black),
-                            ),
-                            Text(
-                              data?.getClientData()?.nameOfFirm ?? "",
-                              style: const TextStyle(
-                                  fontSize: 15, color: Colors.black),
-                            ),
-                            // const GridCheckbox(),
-                          ],
-                        );
-                      },
-                      loading: () {
-                        return const Center(
-                            child:
-                                CircularProgressIndicator()); // You can replace this with your custom loader widget
-                      },
-                      error: (error, stackTrace) {
-                        return Text(
-                            'Error: $error'); // You can replace this with your custom error handling UI
-                      },
+                    child: Column(
+                      children: [
+                        ProfileWidget(
+                          profileCompletionPercentage:
+                              profileCompletionPercentage,
+                        ),
+                        Text(
+                          // '${data?.firstName} ${data?.lastName}',
+                          'Dhairya Seth',
+                          style: const TextStyle(
+                              fontSize: 25, color: Colors.black),
+                        ),
+                        Text(
+                          // data?.getClientData()?.nameOfFirm ?? "",
+                          'M/S Traders',
+                          style: const TextStyle(
+                              fontSize: 15, color: Colors.black),
+                        ),
+                        // const GridCheckbox(),
+                      ],
                     ),
+                    // child: userAsyncData.when(
+                    //   data: (data) {
+                    //     return Column(
+                    //       children: [
+                    //         ProfileWidget(
+                    //           profileCompletionPercentage:
+                    //               profileCompletionPercentage,
+                    //         ),
+                    //         Text(
+                    //           // '${data?.firstName} ${data?.lastName}',
+                    //           'Dhairya Seth',
+                    //           style: const TextStyle(
+                    //               fontSize: 25, color: Colors.black),
+                    //         ),
+                    //         Text(
+                    //           // data?.getClientData()?.nameOfFirm ?? "",
+                    //           'M/S Traders',
+                    //           style: const TextStyle(
+                    //               fontSize: 15, color: Colors.black),
+                    //         ),
+                    //         // const GridCheckbox(),
+                    //       ],
+                    //     );
+                    //   },
+                    //   loading: () {
+                    //     return const Center(
+                    //         child:
+                    //             CircularProgressIndicator()); // You can replace this with your custom loader widget
+                    //   },
+                    //   error: (error, stackTrace) {
+                    //     return Text(
+                    //         'Error: $error'); // You can replace this with your custom error handling UI
+                    //   },
+                    // ),
                   ),
                 ),
                 const SizedBox(

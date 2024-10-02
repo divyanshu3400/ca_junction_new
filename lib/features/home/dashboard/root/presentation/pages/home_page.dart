@@ -26,14 +26,14 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   void initState() {
-    Future(() {
-      ref.read(connectivityStatusProviders.notifier).checkStatus();
-    });
-    Future(() {
-      ref.read(userDataNotifierProvider.notifier).fetchUserDataAPI();
-    });
-    super.initState();
-    requestNotificationPermission(context);
+    // Future(() {
+    //   ref.read(connectivityStatusProviders.notifier).checkStatus();
+    // });
+    // Future(() {
+    //   ref.read(userDataNotifierProvider.notifier).fetchUserDataAPI();
+    // });
+    // super.initState();
+    // requestNotificationPermission(context);
   }
 
   @override
@@ -69,13 +69,13 @@ class _HomePageState extends ConsumerState<HomePage> {
             child: SingleChildScrollView(
               child: Consumer(
                 builder: (context, watch, child) {
-                  final state = watch.watch(userDataNotifierProvider);
-                  if (state.status == Status.loading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state.status == Status.error) {
-                    return Center(child: Text('${state.message}'));
-                  } else if (state.status == Status.success) {
-                    User? user = state.data;
+                  // final state = watch.watch(userDataNotifierProvider);
+                  // if (state.status == Status.loading) {
+                  //   return const Center(child: CircularProgressIndicator());
+                  // } else if (state.status == Status.error) {
+                  //   return Center(child: Text('${state.message}'));
+                  // } else if (state.status == Status.success) {
+                  //   User? user = state.data;
                     return Column(
                       children: [
                         Padding(
@@ -105,12 +105,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     ),
                                   ),
                                   Text(
-                                    '${user?.firstName ?? ""} ${user?.lastName ?? ""}',
+                                    // '${user?.firstName ?? ""} ${user?.lastName ?? ""}',
+                                    'Dhairya Seth',
                                     style: TextStyle(
                                         fontSize: 14.h, color: Colors.white),
                                   ),
                                   Text(
-                                    '#${user?.username.toString().toUpperCase()}',
+                                    // '#${user?.username.toString().toUpperCase()}',
+                                    '#DHAIRYA',
                                     style: TextStyle(
                                         fontSize: 12.h, color: Colors.white),
                                   ),
@@ -153,14 +155,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        user?.role.toString().toUpperCase() ?? " ",
+                                        // user?.role.toString().toUpperCase() ?? " ",
+                                        'SDE',
                                         style: TextStyle(
                                           fontSize: 12.h,
                                           fontWeight: FontWeight.normal,
                                         ),
                                       ),
                                       Text(
-                                        '#${user?.username.toString().toUpperCase()}',
+                                        // '#${user?.username.toString().toUpperCase()}',
+                                        '#DHAIRYA',
                                         style: TextStyle(
                                           fontSize: 14.h,
                                           fontWeight: FontWeight.normal,
@@ -185,7 +189,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                         context.push('/${Routers.myClients}');
                                       }),
                                   _buildGridItem("assets/images/payment.png",
-                                      'Add Payments', () {}),
+                                      'Add Payments', () {context.push('/${Routers.clientPayment}');}),
                                   _buildGridItem(
                                       "assets/images/mytask.png", 'My Tasks', () {}),
                                   _buildGridItem("assets/images/task.png",
@@ -322,8 +326,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       ],
                     );
-                  }
-                  return Container();
+                  // }
+                  // return Container();
                 },
               ),
             ),
